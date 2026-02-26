@@ -1,12 +1,22 @@
+import os # เพิ่ม os เข้ามา
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
+from typing import Optional, Dict, Any
+from datetime import datetime
 import uvicorn
 
-app = FastAPI(title="Milky Way CDSS")
+app = FastAPI(title="Milky Way CDSS Backend")
 
-# กำหนดโฟลเดอร์สำหรับไฟล์ Static (CSS, JS)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# 1. หาตำแหน่งโฟลเดอร์ปัจจุบันที่ไฟล์ main.py อยู่
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# 2. นำไปเชื่อมกับชื่อโฟลเดอร์ static และ templates (ทำให้เซิร์ฟเวอร์หาเจอแน่นอน)
+app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
+templates = Jinja2Templates(directory=os.path.join(BASE_DIR, "templates"))
+
+# ... (โค้ดส่วนอื่นๆ คงไว้เหมือนเดิม) ...
 
 # กำหนดโฟลเดอร์สำหรับไฟล์ HTML
 templates = Jinja2Templates(directory="templates")
